@@ -10,5 +10,7 @@ public class ShopApplication {
         ApplicationContext context = SpringApplication.run(ShopApplication.class, args);
         var orderService = context.getBean(OrderService.class);
         orderService.placeOrder();
+        var notificationManager = context.getBean(NotificationManager.class);
+        notificationManager.sendNotification("Hello, this is a test");
     }
 }
