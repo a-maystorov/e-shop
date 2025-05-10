@@ -8,9 +8,8 @@ import org.springframework.context.ApplicationContext;
 public class ShopApplication {
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(ShopApplication.class, args);
-        var orderService = context.getBean(OrderService.class);
-        orderService.placeOrder();
-        var notificationManager = context.getBean(NotificationManager.class);
-        notificationManager.sendNotification("Hello, this is a test");
+        var userService = context.getBean(UserService.class);
+        userService.registerUser(new User(1L, "alkin@codewithalkin.com", "12345", "Alkin"));
+        userService.registerUser(new User(1L, "alkin@codewithalkin.com", "12345", "Alkin"));
     }
 }
