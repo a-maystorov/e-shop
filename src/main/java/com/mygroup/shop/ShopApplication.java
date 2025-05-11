@@ -1,14 +1,16 @@
 package com.mygroup.shop;
 
-import org.springframework.boot.SpringApplication;
+import com.mygroup.shop.entities.User;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class ShopApplication {
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(ShopApplication.class, args);
-        var userService = context.getBean(UserService.class);
-        userService.registerUser(new User(1L, "alkin@codewithalkin.com", "12345", "Alkin"));
+//        ApplicationContext context = SpringApplication.run(ShopApplication.class, args);
+        var user = User.builder()
+                .name("John")
+                .email("john@example.com")
+                .password("password")
+                .build();
     }
 }
