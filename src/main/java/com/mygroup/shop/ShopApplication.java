@@ -1,6 +1,6 @@
 package com.mygroup.shop;
 
-import com.mygroup.shop.entities.Address;
+import com.mygroup.shop.entities.Tag;
 import com.mygroup.shop.entities.User;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -14,14 +14,16 @@ public class ShopApplication {
                 .password("password")
                 .build();
 
-        var address = Address.builder()
-                .street("street")
-                .city("city")
-                .state("state")
-                .zip("zip")
-                .build();
+        var tag1 = new Tag("tag1");
+        var tag2 = new Tag("tag2");
 
-        user.addAddress(address);
-        System.out.println(user);
+        user.addTag(tag1);
+        user.addTag(tag2);
+
+        System.out.println("Before removal: " + user);
+
+        user.removeTag(tag1);
+
+        System.out.println("After removal: " + user);
     }
 }
