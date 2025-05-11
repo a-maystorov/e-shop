@@ -24,7 +24,7 @@ public class Tag {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "tag")
+    @ManyToMany(mappedBy = "tags")
     @ToString.Exclude
     private Set<User> users = new HashSet<>();
 
