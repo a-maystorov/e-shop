@@ -1,6 +1,6 @@
 package com.mygroup.shop.controllers;
 
-import com.mygroup.shop.entities.User;
+import com.mygroup.shop.dtos.UserDto;
 import com.mygroup.shop.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +16,21 @@ public class UserController {
     private final UserRepository userRepository;
 
     @GetMapping
-    public Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+    public Iterable<UserDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> new UserDto(user.getId(), user.getName(), user.getEmail()))
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
+    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
         var user = userRepository.findById(id).orElse(null);
-        if (user == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(user);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var userDto = new UserDto(user.getId(), user.getName(), user.getEmail());
+        return ResponseEntity.ok(userDto);
     }
 }
