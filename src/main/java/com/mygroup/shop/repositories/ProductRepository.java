@@ -1,7 +1,17 @@
 package com.mygroup.shop.repositories;
 
 import com.mygroup.shop.entities.Product;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-public interface ProductRepository extends CrudRepository<Product, Long> {
+import java.util.List;
+
+public interface ProductRepository extends JpaRepository<Product, Long> {
+    @EntityGraph(attributePaths = "category")
+    List<Product> findByCategoryId(Byte categoryId);
+
+    @Query("SELECT p FROM Product p")
+    @EntityGraph(attributePaths = "category")
+    List<Product> findAllWithCategory();
 }
