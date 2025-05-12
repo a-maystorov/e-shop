@@ -1,6 +1,7 @@
 package com.mygroup.shop.controllers;
 
 import com.mygroup.shop.dtos.RegisterUserRequest;
+import com.mygroup.shop.dtos.UpdateUserRequest;
 import com.mygroup.shop.dtos.UserDto;
 import com.mygroup.shop.mappers.UserMapper;
 import com.mygroup.shop.repositories.UserRepository;
@@ -21,8 +22,7 @@ public class UserController {
 
     @GetMapping
     public Iterable<UserDto> getAllUsers(
-            @RequestParam(required = false, defaultValue = "", name = "sort")
-            String sort
+            @RequestParam(required = false, defaultValue = "", name = "sort") String sort
     ) {
         if (!Set.of("name", "email").contains(sort)) {
             sort = "name";
@@ -44,7 +44,10 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody RegisterUserRequest request, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<UserDto> createUser(
+            @RequestBody RegisterUserRequest request,
+            UriComponentsBuilder uriBuilder
+    ) {
         var user = userMapper.toEntity(request);
         userRepository.save(user);
 
@@ -52,5 +55,21 @@ public class UserController {
         var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(userDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable(name = "id") Long id,
+            @RequestBody UpdateUserRequest request
+    ) {
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        userMapper.update(request, user);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(userMapper.toDto(user));
     }
 }
