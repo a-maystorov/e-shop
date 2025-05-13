@@ -5,6 +5,8 @@ import com.mygroup.shop.entities.Product;
 import com.mygroup.shop.mappers.ProductMapper;
 import com.mygroup.shop.repositories.CategoryRepository;
 import com.mygroup.shop.repositories.ProductRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +17,14 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/products")
+@Tag(name = "Product")
 public class ProductController {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final CategoryRepository categoryRepository;
 
     @GetMapping
+    @Operation(summary = "Get all products (optionally filtered by category)")
     public List<ProductDto> getAllProducts(@RequestParam(required = false, name = "categoryId") Byte categoryId) {
         List<Product> products;
 
@@ -34,6 +38,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get a single product by ID")
     public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) {
         var product = productRepository.findById(id).orElse(null);
         if (product == null) {
@@ -43,6 +48,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a new product")
     public ResponseEntity<ProductDto> createProduct(
             @RequestBody ProductDto productDto,
             UriComponentsBuilder uriBuilder
@@ -63,8 +69,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update an existing product")
     public ResponseEntity<ProductDto> updateUser(
-            @PathVariable(name = "id") Long id,
+            @PathVariable Long id,
             @RequestBody ProductDto productDto
     ) {
         var category = categoryRepository.findById(productDto.getCategoryId()).orElse(null);
@@ -86,7 +93,8 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") Long id) {
+    @Operation(summary = "Delete a product by ID")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         var product = productRepository.findById(id).orElse(null);
         if (product == null) {
             return ResponseEntity.notFound().build();
