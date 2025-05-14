@@ -1,6 +1,7 @@
 package com.mygroup.shop.services;
 
 import com.mygroup.shop.config.JwtConfig;
+import com.mygroup.shop.entities.Role;
 import com.mygroup.shop.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -48,6 +49,10 @@ public class JwtService {
 
     public Long getUserIdFromToken(String token) {
         return Long.valueOf(getClaims(token).getSubject());
+    }
+
+    public Role getRoleFromToken(String token) {
+        return Role.valueOf(getClaims(token).get("role", String.class));
     }
 
     private Claims getClaims(String token) {
