@@ -4,6 +4,7 @@ import com.mygroup.shop.dtos.ChangePasswordRequest;
 import com.mygroup.shop.dtos.RegisterUserRequest;
 import com.mygroup.shop.dtos.UpdateUserRequest;
 import com.mygroup.shop.dtos.UserDto;
+import com.mygroup.shop.entities.Role;
 import com.mygroup.shop.mappers.UserMapper;
 import com.mygroup.shop.repositories.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,6 +67,7 @@ public class UserController {
 
         var user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         userRepository.save(user);
 
         var userDto = userMapper.toDto(user);
@@ -117,7 +119,7 @@ public class UserController {
         if (!user.getPassword().equals(request.getOldPassword())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        
+
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
 
