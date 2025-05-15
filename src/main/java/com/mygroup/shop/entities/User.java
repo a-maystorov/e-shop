@@ -15,10 +15,12 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "users")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(name = "name")
@@ -54,10 +56,10 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private Set<Product> favoriteProducts = new HashSet<>();
+    private Set<Product> wishlist = new HashSet<>();
 
     public void addToWishlist(Product product) {
-        favoriteProducts.add(product);
+        wishlist.add(product);
     }
 
     @Override
