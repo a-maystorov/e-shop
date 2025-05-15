@@ -4,8 +4,6 @@ import com.mygroup.shop.dtos.CheckoutRequest;
 import com.mygroup.shop.dtos.CheckoutResponse;
 import com.mygroup.shop.dtos.ErrorDto;
 import com.mygroup.shop.entities.Order;
-import com.mygroup.shop.entities.OrderItem;
-import com.mygroup.shop.entities.OrderStatus;
 import com.mygroup.shop.repositories.CartRepository;
 import com.mygroup.shop.repositories.OrderRepository;
 import com.mygroup.shop.services.AuthService;
@@ -44,20 +42,7 @@ public class CheckoutController {
             );
         }
 
-        var order = new Order();
-        order.setTotalPrice(cart.getTotalPrice());
-        order.setStatus(OrderStatus.PENDING);
-        order.setCustomer(authService.getCurrentUser());
-
-        cart.getItems().forEach(item -> {
-            var orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            orderItem.setProduct(item.getProduct());
-            orderItem.setQuantity(item.getQuantity());
-            orderItem.setTotalPrice(item.getTotalPrice());
-            orderItem.setUnitPrice(item.getProduct().getPrice());
-            order.getItems().add(orderItem);
-        });
+        var order = Order.fromCart(cart, authService.getCurrentUser());
 
         orderRepository.save(order);
 
